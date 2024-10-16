@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/548318468618913453/cce9464aaf2f405b84e5c129a8aa10d8/artifacts
+deleted_time: 1729083249217
+end_time: 1729083211234
+entry_point_name: ''
+experiment_id: '548318468618913453'
+lifecycle_stage: deleted
+run_id: cce9464aaf2f405b84e5c129a8aa10d8
+run_name: ta mere
+run_uuid: cce9464aaf2f405b84e5c129a8aa10d8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729083211213
+status: 3
+tags: []
+user_id: new_username

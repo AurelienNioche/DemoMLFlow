@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/548318468618913453/ba22956762a047519d92bc0e13857c04/artifacts
+deleted_time: 1729083469707
+end_time: 1729082853431
+entry_point_name: ''
+experiment_id: '548318468618913453'
+lifecycle_stage: deleted
+run_id: ba22956762a047519d92bc0e13857c04
+run_name: selective-calf-188
+run_uuid: ba22956762a047519d92bc0e13857c04
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729082851404
+status: 3
+tags: []
+user_id: dpt

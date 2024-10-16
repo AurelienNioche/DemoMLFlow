@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/548318468618913453/27eecfd37c7d4d03b3adfa6ae99cf0aa/artifacts
+deleted_time: 1729083469707
+end_time: 1729082876277
+entry_point_name: ''
+experiment_id: '548318468618913453'
+lifecycle_stage: deleted
+run_id: 27eecfd37c7d4d03b3adfa6ae99cf0aa
+run_name: painted-panda-7
+run_uuid: 27eecfd37c7d4d03b3adfa6ae99cf0aa
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729082874248
+status: 3
+tags: []
+user_id: dpt

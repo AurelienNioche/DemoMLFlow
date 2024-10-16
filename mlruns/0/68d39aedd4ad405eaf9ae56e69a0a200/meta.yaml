@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/aureliennioche/Documents/PythonProjects/DemoMLFlow/mlruns/0/68d39aedd4ad405eaf9ae56e69a0a200/artifacts
+deleted_time: 1729083482076
+end_time: 1729081977149
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 68d39aedd4ad405eaf9ae56e69a0a200
+run_name: abrasive-wolf-317
+run_uuid: 68d39aedd4ad405eaf9ae56e69a0a200
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729081977144
+status: 3
+tags: []
+user_id: dpt

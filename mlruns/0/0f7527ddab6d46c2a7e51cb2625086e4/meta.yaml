@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/aureliennioche/Documents/PythonProjects/DemoMLFlow/mlruns/0/0f7527ddab6d46c2a7e51cb2625086e4/artifacts
+deleted_time: 1729083482077
+end_time: 1729081882285
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 0f7527ddab6d46c2a7e51cb2625086e4
+run_name: intrigued-mare-902
+run_uuid: 0f7527ddab6d46c2a7e51cb2625086e4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729081882279
+status: 3
+tags: []
+user_id: dpt

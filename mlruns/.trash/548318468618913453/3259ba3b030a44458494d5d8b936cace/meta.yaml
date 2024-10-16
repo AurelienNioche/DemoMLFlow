@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/548318468618913453/3259ba3b030a44458494d5d8b936cace/artifacts
+deleted_time: 1729083469707
+end_time: 1729082428780
+entry_point_name: ''
+experiment_id: '548318468618913453'
+lifecycle_stage: deleted
+run_id: 3259ba3b030a44458494d5d8b936cace
+run_name: illustrious-hog-581
+run_uuid: 3259ba3b030a44458494d5d8b936cace
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729082426754
+status: 3
+tags: []
+user_id: dpt

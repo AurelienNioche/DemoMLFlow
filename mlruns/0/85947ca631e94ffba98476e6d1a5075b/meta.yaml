@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/aureliennioche/Documents/PythonProjects/DemoMLFlow/mlruns/0/85947ca631e94ffba98476e6d1a5075b/artifacts
+deleted_time: 1729083482070
+end_time: 1729082312720
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 85947ca631e94ffba98476e6d1a5075b
+run_name: bemused-fly-125
+run_uuid: 85947ca631e94ffba98476e6d1a5075b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729082312696
+status: 3
+tags: []
+user_id: dpt

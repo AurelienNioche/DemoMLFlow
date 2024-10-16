@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/aureliennioche/Documents/PythonProjects/DemoMLFlow/mlruns/0/8c0cbc52cfb246e9b33e09f1e3379d22/artifacts
+deleted_time: 1729083482076
+end_time: 1729082003111
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 8c0cbc52cfb246e9b33e09f1e3379d22
+run_name: selective-ox-845
+run_uuid: 8c0cbc52cfb246e9b33e09f1e3379d22
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729082003106
+status: 3
+tags: []
+user_id: dpt

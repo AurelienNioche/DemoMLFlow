@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/aureliennioche/Documents/PythonProjects/DemoMLFlow/mlruns/0/1caf546e67694c068cc1b5ed34f913bd/artifacts
+deleted_time: 1729083482079
+end_time: 1729081656971
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 1caf546e67694c068cc1b5ed34f913bd
+run_name: merciful-mare-31
+run_uuid: 1caf546e67694c068cc1b5ed34f913bd
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729081656966
+status: 3
+tags: []
+user_id: dpt
