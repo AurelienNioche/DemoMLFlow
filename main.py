@@ -33,7 +33,9 @@ def main():
 
     metadata_artifact_path = "metadata"
     metadata_local_folder_path = "metadata"
-    metadata_file_name = "metadata.csv"
+    metadata_file_name = "metadata.json"
+
+    metadata_name = "metadata"
 
     load_dotenv(override=True)
     model = Model()
@@ -69,11 +71,11 @@ def main():
         mlflow.log_metric(key="test", value=np.random.random(), step=None)
 
         # Log metrics as artifacts --------------------------------------------------------------------------------
-        metrics = pd.DataFrame({
+        metrics = {
             "precision": np.random.random(),
             "recall": np.random.random(),
-        })
-        mlflow.log_table(data=metrics.to_dict(), artifact_file="tables/metrics.csv")
+        }
+        mlflow.log_table(data=metrics, artifact_file="tables/metrics.json")
         mlflow.set_tags(run_tags)
 
         # Log the model ------------------------------------------------------------------------------
@@ -86,7 +88,7 @@ def main():
         run_id = run.info.run_id
         metadata = pd.read_csv(metadata_local_file)
         source = f"{os.getenv('MLFLOW_TRACKING_URI')}/#/experiments/{experiment_id}/runs/{run_id}/artifacts/{metadata_artifact_path}/{metadata_local_file}"
-        dataset = from_pandas(df=metadata, source=source)
+        dataset = from_pandas(df=metadata, source=source, name=metadata_name)
         mlflow.log_input(dataset, context="training")
 
         # Log figures --------------------------------------------------------------------------------
