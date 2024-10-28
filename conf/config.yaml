@@ -1,0 +1,3 @@
+defaults:
+  - flavor: default
+  - mlflow: default
