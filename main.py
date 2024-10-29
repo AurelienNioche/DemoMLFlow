@@ -1,5 +1,6 @@
 import os
 import warnings
+import logging
 
 import hydra
 import pandas as pd
@@ -11,8 +12,22 @@ import mlflow
 from mlflow.data.pandas_dataset import from_pandas
 from omegaconf import DictConfig, OmegaConf
 
-import logging
-logging.getLogger("mlflow").setLevel(logging.ERROR)
+
+def filter_mlflow_logs():
+    """
+    Removing all the warnings from the mlflow logs
+    """
+    warnings.filterwarnings("ignore", category=UserWarning, module="mlflow")
+    loggers = (
+        [name for name in logging.root.manager.loggerDict if "mlflow" in name]
+        + ["mlflow.system_metrics.system_metrics_monitor"]
+    )
+    for logger_name in loggers:
+        logger = logging.getLogger(logger_name)
+        if logger_name == "mlflow.tracking._tracking_service.client":
+            logger.addFilter(lambda record: record.levelno != logging.WARNING)
+        else:
+            logger.addFilter(lambda record: record.levelno == logging.ERROR)
 
 
 class Model(torch.nn.Module):
@@ -26,9 +41,13 @@ class Model(torch.nn.Module):
 
 @hydra.main(config_path="conf", config_name="config", version_base=None)
 def main(cfg: DictConfig):
-    warnings.filterwarnings("ignore", category=UserWarning, module="mlflow")
+    filter_mlflow_logs()
 
+    print("=" * 100)
+    print("Config")
+    print("=" * 100)
     print(OmegaConf.to_yaml(cfg, resolve=True))
+    print("=" * 100)
 
     model_artifact_path = "my_fancy_model"
     model_reg_name = "my_fancy_model_for_registration"
@@ -125,8 +144,6 @@ def main(cfg: DictConfig):
         )
         for k, val in cfg.mlflow.model_tags.items():
             client.set_registered_model_tag(model_reg_name, k, val)
-
-    # print(mlflow.MlflowClient().get_run(run.info.run_id).data)
 
 
 if __name__ == '__main__':
