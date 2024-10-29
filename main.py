@@ -49,15 +49,6 @@ def main(cfg: DictConfig):
     print(OmegaConf.to_yaml(cfg, resolve=True))
     print("=" * 100)
 
-    model_artifact_path = "my_fancy_model"
-    model_reg_name = "my_fancy_model_for_registration"
-
-    metadata_artifact_path = "metadata"
-    metadata_local_folder_path = "data"
-    metadata_file_name = "metadata.json"
-
-    metadata_name = "metadata"
-
     model_uri = os.getenv("MLFLOW_TRACKING_URI")
 
     load_dotenv(override=True)
@@ -65,8 +56,6 @@ def main(cfg: DictConfig):
 
     mlflow.set_tracking_uri(model_uri)
     mlflow.set_experiment(cfg.mlflow.experiment_name)
-
-    metadata_local_file = f"{metadata_local_folder_path}/{metadata_file_name}"
 
     with mlflow.start_run(
             run_name=cfg.mlflow.run_name,
@@ -92,15 +81,18 @@ def main(cfg: DictConfig):
 
         # Log the model ------------------------------------------------------------------------------
         model_info = mlflow.pytorch.log_model(
-            model, artifact_path=model_artifact_path)
+            model, artifact_path=cfg.mlflow.model_artifact_path) # , registered_model_name=cfg.mlflow.model_name)
 
         # Log metadata --------------------------------------------------------------------------------
-        mlflow.log_artifact(metadata_local_file, artifact_path=metadata_artifact_path)
+        local_path = f"{cfg.data.metadata_local_folder_path}/{cfg.data.metadata_file_name}"
+        mlflow.log_artifact(
+            local_path=local_path,
+            artifact_path=cfg.mlflow.metadata_artifact_path,)
         experiment_id = mlflow.get_experiment_by_name(cfg.mlflow.experiment_name).experiment_id
         run_id = run.info.run_id
-        metadata = pd.read_csv(metadata_local_file)
-        source = f"{os.getenv('MLFLOW_TRACKING_URI')}/#/experiments/{experiment_id}/runs/{run_id}/artifacts/{metadata_artifact_path}/{metadata_local_file}"
-        dataset = from_pandas(df=metadata, source=source, name=metadata_name)
+        metadata = pd.read_csv(local_path)
+        source = f"{os.getenv('MLFLOW_TRACKING_URI')}/#/experiments/{experiment_id}/runs/{run_id}/artifacts/{cfg.mlflow.metadata_artifact_path}/{cfg.data.metadata_file_name}"
+        dataset = from_pandas(df=metadata, source=source, name=cfg.mlflow.dataset_name)
         mlflow.log_input(dataset, context="training")
 
         # Log figures --------------------------------------------------------------------------------
@@ -143,7 +135,7 @@ def main(cfg: DictConfig):
             description=cfg.mlflow.model_description,
         )
         for k, val in cfg.mlflow.model_tags.items():
-            client.set_registered_model_tag(model_reg_name, k, val)
+            client.set_registered_model_tag(cfg.mlflow.model_name, k, val)
 
 
 if __name__ == '__main__':

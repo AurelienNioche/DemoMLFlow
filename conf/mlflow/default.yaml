@@ -22,3 +22,11 @@ model_version_alias: "my_favorite_model_alias"
 model_version_tags:
   my_favorite_tag: "my_favorite_tag_value_for_my_favorite_model_version"
   another_favorite_tag: "another_favorite_tag_value_for_my_favorite_model_version"
+
+# Dataset (in our case metadata)
+dataset_name: "my_favorite_dataset"
+
+# Organisation of the artifacts
+model_artifact_path: "my_fancy_model"
+metadata_artifact_path: "my_metadata"
+

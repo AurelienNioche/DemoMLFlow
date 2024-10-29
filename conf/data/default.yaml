@@ -1,0 +1,3 @@
+# Path to data, these kind of things
+metadata_local_folder_path: "data"
+metadata_file_name: "metadata.json"
