@@ -27,6 +27,6 @@ model_version_tags:
 dataset_name: "my_favorite_dataset"
 
 # Organisation of the artifacts
-model_artifact_path: "my_fancy_model"
-metadata_artifact_path: "my_metadata"
+model_artifact_path: "model"
+metadata_artifact_path: "metadata"
 
