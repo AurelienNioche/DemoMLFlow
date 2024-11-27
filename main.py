@@ -119,7 +119,7 @@ def train(cfg: DictConfig):
     model_uri = os.getenv("MLFLOW_TRACKING_URI")
 
     model = Model()
-    data_handler = DataHandler()
+    data_handler = DataHandler(cfg)
     trainer = Trainer(model, data_handler, cfg)
 
     mlflow.set_tracking_uri(model_uri)
