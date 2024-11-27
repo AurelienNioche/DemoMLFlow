@@ -1,4 +1,3 @@
 defaults:
-  - flavor: default
-  - mlflow: default
+  - model: default
   - data: default
