@@ -46,7 +46,7 @@ class Model(nn.Module):
 
 class DataHandler:
 
-    def __init__(self):
+    def __init__(self, cfg: DictConfig):
         # Define a transform to normalize the data
         transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
         # Download and load the training data
@@ -58,9 +58,10 @@ class DataHandler:
         train_dataset, valid_dataset, test_dataset = random_split(dataset, [train_size, valid_size, test_size])
 
         # Create DataLoaders for each dataset
-        self.train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-        self.valid_loader = DataLoader(valid_dataset, batch_size=64, shuffle=False)
-        self.test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+        batch_size = cfg.model.training.batch_size
+        self.train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+        self.valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False)
+        self.test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 
 class Trainer:
@@ -106,7 +107,7 @@ class Trainer:
 
 
 @hydra.main(config_path="conf", config_name="config", version_base=None)
-def main(cfg: DictConfig):
+def train(cfg: DictConfig):
     filter_mlflow_logs()
     print("=" * 100)
     print("Config")
@@ -228,5 +229,5 @@ def main(cfg: DictConfig):
 
 if __name__ == '__main__':
 
-    main()
+    train()
 
