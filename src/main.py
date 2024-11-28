@@ -1,6 +1,7 @@
 import os
 import warnings
 import logging
+from urllib.parse import urlparse
 
 import hydra
 import pandas as pd
@@ -65,13 +66,15 @@ class DataHandler:
 
 
 class Trainer:
-    def __init__(self, model: Model, data_handler: DataHandler, cfg: DictConfig):
+    def __init__(self, model: Model, data_handler: DataHandler,
+                 criterion: nn.Module,
+                 cfg: DictConfig):
         self.model = model
         self.data_handler = data_handler
-        self.criterion = nn.CrossEntropyLoss()
+        self.criterion = criterion
         self.optimizer = optim.Adam(model.parameters(), lr=cfg.model.training.learning_rate)
 
-    def epoch(self):
+    def epoch(self) -> float:
         train_losses = []
         for data, labels in self.data_handler.train_loader:
             # Forward pass
@@ -86,27 +89,36 @@ class Trainer:
             # Track the loss
             train_losses.append(loss.item())
 
+        return float(np.mean(train_losses))
+
+
+class Evaluator:
+
+    def __init__(self, model: Model, data_handler: DataHandler, criterion: nn.Module,
+                 cfg: DictConfig):
+        self.model = model
+        self.data_handler = data_handler
+        self.criterion = criterion
+        self.cfg = cfg
+
+    def _evaluate(self, data_loader) -> float:
         with torch.no_grad():
-            valid_losses = []
-            for data, labels in self.data_handler.valid_loader:
+            losses = []
+            for data, labels in data_loader:
                 # Forward pass
                 outputs = self.model(data)
                 loss = self.criterion(outputs, labels)
-                valid_losses.append(loss.item())
-
-        return np.mean(train_losses), np.mean(valid_losses)
+                losses.append(loss.item())
+        return float(np.mean(losses))
 
     def test(self):
-        test_losses = []
-        for data, labels in self.data_handler.test_loader:
-            # Forward pass
-            outputs = self.model(data)
-            loss = self.criterion(outputs, labels)
-            test_losses.append(loss.item())
-        return np.mean(test_losses)
+        return self._evaluate(self.data_handler.test_loader)
+
+    def valid(self):
+        return self._evaluate(self.data_handler.valid_loader)
 
 
-@hydra.main(config_path="conf", config_name="config", version_base=None)
+@hydra.main(config_path="../conf", config_name="config", version_base=None)
 def train(cfg: DictConfig):
     filter_mlflow_logs()
     print("=" * 100)
@@ -120,7 +132,9 @@ def train(cfg: DictConfig):
 
     model = Model()
     data_handler = DataHandler(cfg)
-    trainer = Trainer(model, data_handler, cfg)
+    criterion = nn.CrossEntropyLoss()
+    trainer = Trainer(model=model, data_handler=data_handler, cfg=cfg, criterion=criterion)
+    evaluator = Evaluator(model=model, data_handler=data_handler, cfg=cfg, criterion=criterion)
 
     mlflow.set_tracking_uri(model_uri)
 
@@ -129,7 +143,12 @@ def train(cfg: DictConfig):
     try:
         mlflow.set_experiment(exp_name)
     except mlflow.exceptions.MlflowException:
-        print(f"Check the connection to the tracking server: {model_uri}")
+        parsed_uri = urlparse(model_uri)
+        host = parsed_uri.hostname
+        port = parsed_uri.port
+        print(f"ERROR - Check the connection to the tracking server."
+              
+              f"If necessary run it with  mlflow server --host {host} --port {port}")
         exit(0)
         # raise ValueError(f"Experiment {cfg.mlflow.experiment_name} not found. Check the connection to the tracking server.")
     run_name = cfg.model.mlflow.run_name
@@ -144,16 +163,17 @@ def train(cfg: DictConfig):
         mlflow.log_params(dict(**cfg.model.training))
 
         # Training loop
-        num_epochs = 5
+        num_epochs = cfg.model.training.num_epochs
         for epoch in range(num_epochs):
-            train_loss, valid_loss = trainer.epoch()
+            train_loss = trainer.epoch()
+            valid_loss = evaluator.valid()
             print(f'Epoch [{epoch+1}/{num_epochs}], Valid loss: {valid_loss:.4f}')
 
             # Run and dynamic log of metrics ---------------------------------------------------------------------
             mlflow.log_metric(key="train", value=train_loss, step=epoch)
             mlflow.log_metric(key="valid", value=valid_loss, step=epoch)
 
-        test_loss = trainer.test()
+        test_loss = evaluator.test()
         mlflow.log_metric(key="test", value=test_loss, step=None)
         print("=" * 100)
         print(f"Test loss: {test_loss:.4f}")
@@ -225,6 +245,8 @@ def train(cfg: DictConfig):
         )
         for k, val in cfg.model.mlflow.model_tags.items():
             client.set_registered_model_tag(model_name, k, val)
+
+    return evaluator.valid()
 
 
 if __name__ == '__main__':

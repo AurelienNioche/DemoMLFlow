@@ -1,33 +1,56 @@
 training:
   learning_rate: 0.001
   batch_size: 64
+  num_epochs: 5
+
+optuna:
+  study_name: my_favorite_study
+  n_trials: 100
+  direction: minimize
+  hyperparameters:
+    learning_rate:
+      method: suggest_float
+      args:
+        low: 1e-5
+        high: 1e-1
+        log: True
+    batch_size:
+      method: suggest_int
+      args:
+        low: 32
+        high: 128
+    num_epochs:
+      method: suggest_int
+      args:
+        low: 2
+        high: 10
 
 mlflow:
   # Give a name to the experiment and run
-  experiment_name: "my_favorite_experiment"
-  run_name: "my_favorite_run"
-  run_description: "This is my favorite experiment"
+  experiment_name: my_favorite_experiment
+  run_name: my_favorite_run
+  run_description: This is my favorite experiment
   run_tags:
-    my_favorite_tag: "my_favorite_tag_value"
-    another_favorite_tag: "another_favorite_tag_value"
+    my_favorite_tag: my_favorite_tag_value
+    another_favorite_tag: another_favorite_tag_value
 
   # This is for the registered model
-  model_description: "This is my favorite model"
-  model_name: "my_favorite_model"
+  model_description: This is my favorite model
+  model_name: my_favorite_model
   model_tags:
-    my_favorite_tag: "my_favorite_tag_value"
-    another_favorite_tag: "another_favorite_tag_value"
+    my_favorite_tag: my_favorite_tag_value
+    another_favorite_tag: another_favorite_tag_value
 
   # This is specific to the model version
-  model_version_description: "This is my favorite model version"
-  model_version_alias: "my_favorite_model_alias"
+  model_version_description: This is my favorite model version
+  model_version_alias: my_favorite_model_alias
   model_version_tags:
-    my_favorite_tag: "my_favorite_tag_value_for_my_favorite_model_version"
-    another_favorite_tag: "another_favorite_tag_value_for_my_favorite_model_version"
+    my_favorite_tag: my_favorite_tag_value_for_my_favorite_model_version
+    another_favorite_tag: another_favorite_tag_value_for_my_favorite_model_version
 
   # Dataset (in our case metadata)
-  dataset_name: "my_favorite_dataset"
+  dataset_name: my_favorite_dataset
 
   # Organisation of the artifacts
-  model_artifact_path: "model"
-  metadata_artifact_path: "metadata"
+  model_artifact_path: model
+  metadata_artifact_path: metadata

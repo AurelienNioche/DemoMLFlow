@@ -167,3 +167,6 @@ outputs/
 
 # MNIST data
 data/MNIST/
+
+# Optuna
+study/
