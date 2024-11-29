@@ -4,31 +4,10 @@ import hydra
 import optuna
 from hydra import initialize, compose
 from hydra.core.global_hydra import GlobalHydra
+from hydra.core.hydra_config import HydraConfig
 from omegaconf import OmegaConf, DictConfig
 
 from main import train
-
-
-# Define the objective function for Optuna
-def objective(trial):
-    GlobalHydra.instance().clear()
-    with initialize(config_path="../conf", version_base=None):
-        config = compose(config_name="config")
-
-        # Sample hyperparameters using Optuna
-        for key in config.model.optuna.hyperparameters.keys():
-            method = config.model.optuna.hyperparameters[key].method
-            args = config.model.optuna.hyperparameters[key].args
-            config.model.training[key] = getattr(trial, method)(key, **args)
-
-        # config.params.num_epochs = trial.suggest_int('num_epochs', 5, 20)
-
-        # Print out the configuration for debug purposes
-        print(OmegaConf.to_yaml(config))
-
-        # Mock training function, replace with your actual training code
-        accuracy = train(config)
-        return accuracy
 
 
 @hydra.main(config_path="../conf", config_name="config", version_base=None)
@@ -44,6 +23,21 @@ def main(cfg: DictConfig):
         study_name=cfg.model.optuna.study_name,
         storage=optuna_storage,
         load_if_exists=True)
+
+    # Define the objective function for Optuna
+    def objective(_trial):
+        # Sample hyperparameters using Optuna
+        for _key in cfg.model.optuna.hyperparameters.keys():
+            method = cfg.model.optuna.hyperparameters[_key].method
+            args = cfg.model.optuna.hyperparameters[_key].args
+            cfg.model.training[_key] = getattr(_trial, method)(_key, **args)
+
+        # Print out the configuration for debug purposes
+        print(OmegaConf.to_yaml(cfg))
+
+        # Train
+        return train(cfg)
+
     study.optimize(objective, n_trials=100)
 
     # Display the best hyperparameters
